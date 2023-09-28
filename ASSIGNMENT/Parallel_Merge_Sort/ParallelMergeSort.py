@@ -71,7 +71,7 @@ def RunningTime(func, arr, numCore): # hàm tính toán thời gian chạy của
     return end - start # tổng thời gian thực hiện
 
 if __name__ == '__main__':
-    value = 100000
+    value = 1
     nSize = []
     for i in range(1, 8):
       value *= 10
