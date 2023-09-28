@@ -48,18 +48,18 @@ def ParallelMergeSort(arr, numCore): # hàm thực hiện thuật toán merge so
         id += div + remain
         
     with multiprocessing.Pool(processes=numCore) as pool:
-        sorted_chunks = pool.map(MergeSort, chunks) # thực hiện sắp xếp trộn cho từng bộ xử lý thông qua phương thức pool
+        sortedChunks = pool.map(MergeSort, chunks) # thực hiện sắp xếp trộn cho từng bộ xử lý thông qua phương thức pool
 
-        while len(sorted_chunks) > 1: # khi vẫn còn chunk chưa xử lý
-            next_chunks = []
-            for i in range(0, len(sorted_chunks), 2): # xét từng dãy thứ i đã được sắp xếp, sắp xếp lại 2 dãy i và i + 1 bằng phương pháp trộn
-                if i + 1 < len(sorted_chunks):
-                    next_chunks.append(merge(sorted_chunks[i], sorted_chunks[i + 1]))
+        while len(sortedChunks) > 1: # khi vẫn còn chunk chưa xử lý
+            nextChunks = []
+            for i in range(0, len(sortedChunks), 2): # xét từng dãy thứ i đã được sắp xếp, sắp xếp lại 2 dãy i và i + 1 bằng phương pháp trộn
+                if i + 1 < len(sortedChunks):
+                    nextChunks.append(merge(sortedChunks[i], sortedChunks[i + 1]))
                 else:
-                    next_chunks.append(sorted_chunks[i])
-            sorted_chunks = next_chunks
+                    nextChunks.append(sortedChunks[i])
+            sortedChunks = nextChunks
 
-        return sorted_chunks[0] # trả lại kết quả cuối cùng
+        return sortedChunks[0] # trả lại kết quả cuối cùng
 
 def RunningTime(func, arr, numCore): # hàm tính toán thời gian chạy của hàm func với một dãy
     start = time.time() # thời gian bắt đầu
@@ -71,9 +71,9 @@ def RunningTime(func, arr, numCore): # hàm tính toán thời gian chạy của
     return end - start # tổng thời gian thực hiện
 
 if __name__ == '__main__':
-    value = 1
+    value = 100000
     nSize = []
-    for i in range(1, 6):
+    for i in range(1, 8):
       value *= 10
       nSize.append(value)
       nSize.append(value * 5)
@@ -90,8 +90,13 @@ if __name__ == '__main__':
             else: # ngược lại làm merge sort tuần tự
                 stoTime[i].append(RunningTime(MergeSort, arr, core[i]))
         
+        print("N =", n)
         for i in range(len(core)):
-            print(core[i], ":", stoTime[i][-1])
+            if core[i] == -1: 
+                print("Sequential", end = "")
+            else: 
+                print(str(core[i]) + " cores", end ="")
+            print(":", stoTime[i][-1])
     for i in range(len(core)):
       if core[i] == -1:
         label = 'Sequential'
